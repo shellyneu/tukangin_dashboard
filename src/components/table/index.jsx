@@ -9,10 +9,9 @@ const Table = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.BASE_URL}/api/transactions`
+          `http://localhost:5001/api/transactions`
         );
         setItems(response.data.data);
-        console.table(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -70,45 +69,53 @@ const Table = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {items.map((item, index) => (
-            <tr key={item.id}>
-              <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.userId}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{item.tukangId}</td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {new Date(item.date).toLocaleDateString("en-GB")}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <a
-                  href={item.bukti}
-                  className="text-blue-500"
-                  target="_blank"
-                  rel="noopener noreferrer"
+          {Array.isArray(items) && items.length > 0 ? (
+            items.map((item, index) => (
+              <tr key={item.id}>
+                <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{item.userId}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{item.tukangId}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {new Date(item.date).toLocaleDateString("en-GB")}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <a
+                    href={item.bukti}
+                    className="text-blue-500"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Lihat Bukti
+                  </a>
+                </td>
+                <td
+                  className={`px-6 py-4 whitespace-nowrap ${
+                    item.status === "Pengajuan"
+                      ? "text-blue-500"
+                      : item.status === "Pengerjaan"
+                      ? "text-yellow-500"
+                      : "text-green-500"
+                  }`}
                 >
-                  Lihat Bukti
-                </a>
-              </td>
-              <td
-                className={`px-6 py-4 whitespace-nowrap ${
-                  item.status === "Pengajuan"
-                    ? "text-blue-500"
-                    : item.status === "Pengerjaan"
-                    ? "text-yellow-500"
-                    : "text-green-500"
-                }`}
-              >
-                {item.status}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {item.action === "Terima" && (
-                  <button className="text-blue-500">Terima</button>
-                )}
-                {item.action === "Selesai" && (
-                  <button className="text-green-500">Selesai</button>
-                )}
+                  {item.status}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {(item.action === null || item.action === "Terima") && (
+                    <button className="text-blue-500">Terima</button>
+                  )}
+                  {item.action === "Selesai" && (
+                    <button className="text-green-500">Selesai</button>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7" className="px-6 py-4 text-center text-black">
+                No data available
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
