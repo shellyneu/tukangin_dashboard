@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "jsx": "react",
     "paths": {
       "@/*": ["./src/*"]
     }
